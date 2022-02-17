@@ -27,11 +27,17 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.navigateToSelectedPhoto.observe(viewLifecycleOwner, {
-            if (null != it) {
-                Navigation.findNavController(requireView())
-                    .navigate(HomeFragmentDirections.actionShowDetail(it))
-                viewModel.displayPropertyDetailsComplete()
+        viewModel.navigateToSelectedPhoto.observe(viewLifecycleOwner, { photoIndex ->
+            if (null != photoIndex) {
+                viewModel.roverName.value?.let { roverName ->
+                    viewModel.sol.value?.let { sol ->
+                        viewModel.selectedCamera.value?.let { selectedCamera ->
+                            Navigation.findNavController(requireView())
+                                .navigate(HomeFragmentDirections.actionShowDetail(DataSend(roverName, photoIndex, sol, selectedCamera)))
+                            viewModel.displayPropertyDetailsComplete()
+                        }
+                    }
+                }
             }
         })
     }

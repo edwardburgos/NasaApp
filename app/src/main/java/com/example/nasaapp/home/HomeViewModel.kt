@@ -7,6 +7,8 @@ import com.example.data.network.model.PhotoApiMapper
 import com.example.domain.Photo
 import com.example.usecases.getphotos.GetPhotosApiUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,6 +18,8 @@ class HomeViewModel @Inject constructor(
     private val apiMapper: PhotoApiMapper
 ) : ViewModel() {
 
+    val rovers = listOf("Curiosity", "Opportunity", "Spirit")
+
     private val _photos = MutableLiveData<List<Photo>>()
     val photos: LiveData<List<Photo>>
         get() = _photos
@@ -24,11 +28,57 @@ class HomeViewModel @Inject constructor(
     val navigateToSelectedPhoto: LiveData<Int?>
         get() = _navigateToSelectedPhoto
 
-    init {
+    private val _sol = MutableLiveData("1000")
+    val sol: LiveData<String>
+        get() = _sol
 
-        viewModelScope.launch {
-            getPhotosApi("Curiosity", 1000).collect {
-                if (_photos.value == null || _photos.value?.size == 0 || _photos.value != apiMapper.fromEntityList(it)) {
+    private val _roverName = MutableLiveData("Curiosity")
+    val roverName: LiveData<String>
+        get() = _roverName
+
+    private val _selectedCamera = MutableLiveData("All")
+    val selectedCamera: LiveData<String>
+        get() = _selectedCamera
+
+    fun updateSol(newValue: String) {
+        _sol.value = newValue
+    }
+
+    fun updateRoverName(newValue: String) {
+        _roverName.value = newValue
+    }
+
+    fun updateSelectedCamera(newValue: String) {
+        _selectedCamera.value = newValue
+        _sol.value?.let {
+            _roverName.value?.let { it1 ->
+                _selectedCamera.value?.let { it2 ->
+                    getPhotosFromFlow(it1, it, it2)
+                }
+            }
+        }
+    }
+
+    var currentFlow = viewModelScope.launch { }
+
+    init {
+        _sol.value?.let {
+            _roverName.value?.let { it1 ->
+                _selectedCamera.value?.let { it2 ->
+                    getPhotosFromFlow(it1, it, it2)
+                }
+            }
+        }
+    }
+
+    fun getPhotosFromFlow(name: String, sol: String, selectedCamera: String) {
+        currentFlow.cancel()
+        currentFlow = viewModelScope.launch {
+            getPhotosApi(name.lowercase(), sol, selectedCamera).collect {
+                if (_photos.value == null || _photos.value?.size == 0 || _photos.value != apiMapper.fromEntityList(
+                        it
+                    )
+                ) {
                     _photos.value = apiMapper.fromEntityList(it)
                 }
             }
@@ -41,5 +91,13 @@ class HomeViewModel @Inject constructor(
 
     fun displayPropertyDetailsComplete() {
         _navigateToSelectedPhoto.value = null
+    }
+
+    fun getAvailableCameras(roverName: String): List<String> {
+        return when (roverName) {
+            "Curiosity" -> listOf("All", "FHAZ", "RHAZ", "MAST", "CHEMCAM", "MAHLI", "MARDI", "NAVCAM")
+            "Opportunity", "Spirit" -> listOf("All", "FHAZ", "RHAZ", "NAVCAM", "PANCAM", "MINITES")
+            else -> listOf()
+        }
     }
 }

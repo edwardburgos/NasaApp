@@ -21,7 +21,8 @@ fun PhotoCard(
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .clickable(onClick = { navigate(index) })
+            .clickable(onClick = { navigate(index) }),
+        elevation = 4.dp
     ) {
         Image(
             painter = rememberImagePainter(data = photo.img_src),

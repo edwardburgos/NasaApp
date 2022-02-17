@@ -1,5 +1,6 @@
 package com.example.nasaapp.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -15,20 +16,22 @@ import com.example.nasaapp.R
 fun Camera(
     cameraName: String,
     isSelected: Boolean,
+    onClick: (String) -> Unit
 ) {
     Surface(
-        modifier = Modifier.padding(end = 8.dp, bottom = 8.dp),
+        modifier = Modifier.padding(end = 8.dp, bottom = 8.dp).clickable(onClick = { onClick(cameraName) }),
         elevation = 8.dp,
         shape = RoundedCornerShape(16.dp),
         color = when {
             isSelected -> colorResource(R.color.teal_200)
             else -> colorResource(R.color.purple_500)
-        }
+        },
+
     ) {
         Text(
             text = cameraName,
             style = MaterialTheme.typography.body2,
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(16.dp, 8.dp)
         )
     }
 }

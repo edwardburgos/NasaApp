@@ -7,11 +7,11 @@ import retrofit2.http.Query
 
 interface ApiService {
     @GET("curiosity/photos")
-    fun getPhotosCuriosity(@Query("sol") sol: Int): Call<ResponseApi>
+    fun getPhotosCuriosity(@Query("sol") sol: String, @Query("camera") selectedCamera: String?): Call<ResponseApi>
 
     @GET("opportunity/photos")
-    fun getPhotosOpportunity(@Query("sol") sol: Int): Call<ResponseApi>
+    fun getPhotosOpportunity(@Query("sol") sol: String, @Query("camera") selectedCamera: String?): Call<ResponseApi>
 
     @GET("spirit/photos")
-    fun getPhotosSpirit(@Query("sol") sol: Int): Call<ResponseApi>
+    fun getPhotosSpirit(@Query("sol") sol: String, @Query("camera") selectedCamera: String?): Call<ResponseApi>
 }

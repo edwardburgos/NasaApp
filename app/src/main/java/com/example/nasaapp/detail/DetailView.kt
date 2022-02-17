@@ -12,13 +12,15 @@ import com.google.accompanist.pager.rememberPagerState
 fun DetailView(viewModel: DetailViewModel, index: Int) {
     val photos by viewModel.photos.observeAsState(listOf())
     val pagerState = rememberPagerState()
+    val scrolled = remember { mutableStateOf(false) }
 
     HorizontalPager(count = photos.size, state = pagerState) { page ->
         ExtendedPhoto(photos.elementAt(page))
     }
 
-    if (pagerState.pageCount != 0 && pagerState.currentPage == 0) {
+    if (pagerState.pageCount != 0 && pagerState.currentPage == 0 && !scrolled.value) {
         LaunchedEffect(pagerState.currentPage) {
+            scrolled.value = true
             pagerState.scrollToPage(index)
         }
     }

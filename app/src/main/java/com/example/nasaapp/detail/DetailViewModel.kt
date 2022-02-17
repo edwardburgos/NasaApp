@@ -21,10 +21,20 @@ class DetailViewModel @Inject constructor(
     val photos: LiveData<List<Photo>>
         get() = _photos
 
+    var currentFlow = viewModelScope.launch { }
+
     init {
-        viewModelScope.launch {
-            getPhotosApi("Curiosity", 1000).collect {
-                if (_photos.value == null || _photos.value?.size == 0 || _photos.value != apiMapper.fromEntityList(it)) {
+        getPhotosFromFlow("Curiosity", "1000", "All")
+    }
+
+    fun getPhotosFromFlow(name: String, sol: String, selectedCamera: String) {
+        currentFlow.cancel()
+        currentFlow = viewModelScope.launch {
+            getPhotosApi(name, sol, selectedCamera).collect {
+                if (_photos.value == null || _photos.value?.size == 0 || _photos.value != apiMapper.fromEntityList(
+                        it
+                    )
+                ) {
                     _photos.value = apiMapper.fromEntityList(it)
                 }
             }

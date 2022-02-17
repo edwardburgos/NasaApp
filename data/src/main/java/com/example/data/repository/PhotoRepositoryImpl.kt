@@ -17,14 +17,15 @@ class PhotoRepositoryImpl @Inject constructor(
 ) : PhotoRepository {
 
     private val refreshIntervalMsShort: Long = 1000
-    private val refreshIntervalMsLong: Long = 300000
+    private val refreshIntervalMsLong: Long = 600000
 
-    override fun getPhotosFromApi(roverName: String, sol: Int): Flow<List<PhotoApi>> {
+    override fun getPhotosFromApi(roverName: String, sol: String, selectedCamera: String): Flow<List<PhotoApi>> {
+        var camera = if (selectedCamera == "All") null else selectedCamera.lowercase()
         return flow {
             val source = when (roverName.lowercase()) {
-                "curiosity" -> apiService.getPhotosCuriosity(sol)
-                "opportunity" -> apiService.getPhotosOpportunity(sol)
-                else -> apiService.getPhotosSpirit(sol)
+                "curiosity" -> apiService.getPhotosCuriosity(sol, camera)
+                "opportunity" -> apiService.getPhotosOpportunity(sol, camera)
+                else -> apiService.getPhotosSpirit(sol, camera)
             }
             var finalResponse = listOf<PhotoApi>()
             source.enqueue(object : Callback<ResponseApi> {
@@ -36,7 +37,7 @@ class PhotoRepositoryImpl @Inject constructor(
                     }
                 }
                 override fun onFailure(call: Call<ResponseApi>, t: Throwable) {
-                    Log.v("Failure", " Message" + t.message)
+                    Log.e("Failure", "Message " + t.message)
                 }
             })
             while (true) {

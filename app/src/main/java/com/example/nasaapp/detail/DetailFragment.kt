@@ -21,9 +21,10 @@ class DetailFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply{
-            val photoIndex = DetailFragmentArgs.fromBundle(requireArguments()).photoIndex
+            val informationReceived = DetailFragmentArgs.fromBundle(requireArguments()).information
+            viewModel.getPhotosFromFlow(informationReceived.roverName, informationReceived.sol, informationReceived.selectedCamera)
             setContent {
-                DetailView(viewModel = viewModel, index = photoIndex)
+                DetailView(viewModel = viewModel, index = informationReceived.photoIndex)
             }
         }
     }

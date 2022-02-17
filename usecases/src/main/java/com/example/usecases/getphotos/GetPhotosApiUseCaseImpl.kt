@@ -5,5 +5,5 @@ import javax.inject.Inject
 
 class GetPhotosApiUseCaseImpl @Inject constructor(private val photoRepository: PhotoRepositoryImpl) :
     GetPhotosApiUseCase {
-    override operator fun invoke(roverName: String, sol: Int) = photoRepository.getPhotosFromApi(roverName, sol)
+    override operator fun invoke(roverName: String, sol: String, selectedCamera: String) = photoRepository.getPhotosFromApi(roverName, sol, selectedCamera)
 }

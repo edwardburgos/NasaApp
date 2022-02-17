@@ -18,8 +18,8 @@
         android:name="com.example.nasaapp.detail.DetailFragment"
         android:label="Details">
         <argument
-            android:name="photoIndex"
-            app:argType="integer"/>
+            android:name="information"
+            app:argType="com.example.nasaapp.home.DataSend"/>
     </fragment>
 
 </navigation>
