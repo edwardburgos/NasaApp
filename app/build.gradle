@@ -1,6 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs'
 }
 
 android {
@@ -35,6 +38,7 @@ android {
     }
     buildFeatures {
         compose true
+        dataBinding true
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
@@ -48,6 +52,10 @@ android {
 }
 
 dependencies {
+
+    implementation project(path: ':usecases')
+    implementation project(path: ':data')
+    implementation project(path: ':domain')
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -64,4 +72,31 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "io.coil-kt:coil-compose:1.4.0"
     implementation "com.google.accompanist:accompanist-flowlayout:0.23.0"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$version_hilt"
+    kapt "com.google.dagger:hilt-android-compiler:$version_hilt"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
+
+    // Coroutines Retrofit
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_retrofit_coroutines_adapter"
+
+    // Moshi
+    implementation "com.squareup.moshi:moshi:$version_moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+
+    // Allows to use by viewmodels()
+    implementation "androidx.fragment:fragment-ktx:$version_fragment_ktx"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment:$version_navigation"
+
+    // Compose LiveData
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+
+    // Pager
+    implementation "com.google.accompanist:accompanist-pager:$version_pager"
 }
