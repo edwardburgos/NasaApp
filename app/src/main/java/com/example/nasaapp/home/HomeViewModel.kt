@@ -20,6 +20,10 @@ class HomeViewModel @Inject constructor(
 
     val rovers = listOf("Curiosity", "Opportunity", "Spirit")
 
+    private val _responseState = MutableLiveData<String>("initial")
+    val responseState: LiveData<String>
+        get() = _responseState
+
     private val _photos = MutableLiveData<List<Photo>>()
     val photos: LiveData<List<Photo>>
         get() = _photos
@@ -75,11 +79,12 @@ class HomeViewModel @Inject constructor(
         currentFlow.cancel()
         currentFlow = viewModelScope.launch {
             getPhotosApi(name.lowercase(), sol, selectedCamera).collect {
-                if (_photos.value == null || _photos.value?.size == 0 || _photos.value != apiMapper.fromEntityList(
-                        it
-                    )
+                if (_photos.value == null || _photos.value?.size == 0 ||
+                    _photos.value != apiMapper.fromEntityList(it.photos) ||
+                    it.status != "initial"
                 ) {
-                    _photos.value = apiMapper.fromEntityList(it)
+                    _responseState.value = it.status
+                    _photos.value = apiMapper.fromEntityList(it.photos)
                 }
             }
         }
@@ -94,10 +99,15 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getAvailableCameras(roverName: String): List<String> {
-        return when (roverName) {
+        val cameras = when (roverName) {
             "Curiosity" -> listOf("All", "FHAZ", "RHAZ", "MAST", "CHEMCAM", "MAHLI", "MARDI", "NAVCAM")
             "Opportunity", "Spirit" -> listOf("All", "FHAZ", "RHAZ", "NAVCAM", "PANCAM", "MINITES")
             else -> listOf()
         }
+        if (cameras.indexOf(selectedCamera.value) == -1) {
+            _selectedCamera.value = "All"
+            updateSelectedCamera("All")
+        }
+        return cameras
     }
 }

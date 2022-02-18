@@ -21,6 +21,10 @@ class DetailViewModel @Inject constructor(
     val photos: LiveData<List<Photo>>
         get() = _photos
 
+    private val _responseState = MutableLiveData<String>("initial")
+    val responseState: LiveData<String>
+        get() = _responseState
+
     var currentFlow = viewModelScope.launch { }
 
     init {
@@ -32,10 +36,11 @@ class DetailViewModel @Inject constructor(
         currentFlow = viewModelScope.launch {
             getPhotosApi(name, sol, selectedCamera).collect {
                 if (_photos.value == null || _photos.value?.size == 0 || _photos.value != apiMapper.fromEntityList(
-                        it
-                    )
+                        it.photos
+                    ) || it.status != "initial"
                 ) {
-                    _photos.value = apiMapper.fromEntityList(it)
+                    _responseState.value = it.status
+                    _photos.value = apiMapper.fromEntityList(it.photos)
                 }
             }
         }
