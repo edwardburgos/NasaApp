@@ -8,7 +8,7 @@ import com.example.domain.Photo
 
 @Composable
 fun PhotosColumn(navigate: (index: Int) -> Unit, photos: List<Photo>) {
-    LazyColumn {
+    LazyColumn (modifier = Modifier.fillMaxHeight()) {
         items(photos.size) { index ->
             Row(
                 modifier = Modifier.fillMaxSize(),
