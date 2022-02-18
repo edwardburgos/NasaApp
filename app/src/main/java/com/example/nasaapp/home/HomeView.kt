@@ -20,6 +20,8 @@ import com.example.nasaapp.R
 import com.example.nasaapp.components.Cameras
 import com.example.nasaapp.components.FilteringModal
 import com.example.nasaapp.components.PhotosColumn
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
@@ -31,6 +33,7 @@ fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
     val sol by viewModel.sol.observeAsState("1000")
     val rover by viewModel.roverName.observeAsState("Curiosity")
     val selectedCamera by viewModel.selectedCamera.observeAsState("All")
+    var isRefreshing by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -49,10 +52,15 @@ fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
         Column {
             Cameras(availableCameras = viewModel.getAvailableCameras(rover), selectedCamera = selectedCamera, onClick = { viewModel.updateSelectedCamera(it) })
             if (photos.isNotEmpty()) {
-                PhotosColumn(
-                    { index -> viewModel.displayPropertyDetails(index) },
-                    photos = photos
-                )
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+                    onRefresh = { viewModel.getPhotosFromFlow(rover, sol, selectedCamera) },
+                ) {
+                    PhotosColumn(
+                        { index -> viewModel.displayPropertyDetails(index) },
+                        photos = photos
+                    )
+                }
             } else {
                 Column(
                     modifier = Modifier.fillMaxSize(),
