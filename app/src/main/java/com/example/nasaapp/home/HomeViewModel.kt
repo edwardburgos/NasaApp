@@ -7,8 +7,6 @@ import com.example.data.network.model.PhotoApiMapper
 import com.example.domain.Photo
 import com.example.usecases.getphotos.GetPhotosApiUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +18,7 @@ class HomeViewModel @Inject constructor(
 
     val rovers = listOf("Curiosity", "Opportunity", "Spirit")
 
-    private val _responseState = MutableLiveData<String>("initial")
+    private val _responseState = MutableLiveData("initial")
     val responseState: LiveData<String>
         get() = _responseState
 
@@ -63,7 +61,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    var currentFlow = viewModelScope.launch { }
+    private var currentFlow = viewModelScope.launch { }
 
     init {
         _sol.value?.let {

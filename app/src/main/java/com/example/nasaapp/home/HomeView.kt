@@ -33,7 +33,7 @@ fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
     val sol by viewModel.sol.observeAsState("1000")
     val rover by viewModel.roverName.observeAsState("Curiosity")
     val selectedCamera by viewModel.selectedCamera.observeAsState("All")
-    var isRefreshing by remember { mutableStateOf(false) }
+    val isRefreshing by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {

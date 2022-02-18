@@ -2,7 +2,6 @@ package com.example.data.repository
 
 import android.util.Log
 import com.example.data.network.ApiService
-import com.example.data.network.model.PhotoApi
 import com.example.data.network.model.ResponseApi
 import com.example.data.repository.model.GetPhotosResponse
 import kotlinx.coroutines.delay
@@ -21,7 +20,7 @@ class PhotoRepositoryImpl @Inject constructor(
     private val refreshIntervalMsLong: Long = 600000
 
     override fun getPhotosFromApi(roverName: String, sol: String, selectedCamera: String): Flow<GetPhotosResponse> {
-        var camera = if (selectedCamera == "All") null else selectedCamera.lowercase()
+        val camera = if (selectedCamera == "All") null else selectedCamera.lowercase()
         return flow {
             val source = when (roverName.lowercase()) {
                 "curiosity" -> apiService.getPhotosCuriosity(sol, camera)
@@ -33,7 +32,7 @@ class PhotoRepositoryImpl @Inject constructor(
                 override fun onResponse(call: Call<ResponseApi>, response: Response<ResponseApi>) {
                     if (response.isSuccessful) {
                         response.body()?.let {
-                            finalResponse = GetPhotosResponse(if (it.photos.size == 0 ) "empty" else "filled", it.photos)
+                            finalResponse = GetPhotosResponse(if (it.photos.isEmpty()) "empty" else "filled", it.photos)
                         }
                     }
                 }
