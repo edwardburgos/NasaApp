@@ -114,4 +114,6 @@ dependencies {
     // More Material Icons
     implementation "androidx.compose.material:material-icons-extended:$version_material"
 
+    // Swiperefresh Accompanist
+    implementation "com.google.accompanist:accompanist-swiperefresh:$version_swiperefresh"
 }
