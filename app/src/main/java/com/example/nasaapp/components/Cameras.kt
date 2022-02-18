@@ -9,7 +9,7 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 fun Cameras(availableCameras: List<String>, selectedCamera: String, onClick: (String) -> Unit) {
     FlowRow(
-        modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp, bottom = 0.dp)
+        modifier = Modifier.padding(start = 8.dp, top = 16.dp, end = 8.dp, bottom = 8.dp)
     ) {
         repeat(availableCameras.size) {
             Camera(availableCameras.elementAt(it), selectedCamera == availableCameras.elementAt(it), onClick = onClick)

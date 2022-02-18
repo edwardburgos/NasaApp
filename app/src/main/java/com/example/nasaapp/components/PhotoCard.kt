@@ -20,7 +20,7 @@ fun PhotoCard(
 ) {
     Card(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(start = 8.dp, top = 0.dp, end = 8.dp, bottom = 16.dp)
             .clickable(onClick = { navigate(index) }),
         elevation = 4.dp
     ) {
