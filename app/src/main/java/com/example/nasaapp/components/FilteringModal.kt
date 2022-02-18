@@ -13,6 +13,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -33,7 +34,10 @@ fun FilteringModal(dialogState: MutableState<Boolean>, solValue: String, roverVa
         text = {
             Column {
                 Text(text = "Rover name", modifier = Modifier.padding(bottom = 4.dp))
-                Column(Modifier.selectableGroup().padding(bottom = 12.dp)) {
+                Column(
+                    Modifier
+                        .selectableGroup()
+                        .padding(bottom = 12.dp)) {
                     options.forEach { text ->
                         Row(
                             Modifier
@@ -48,11 +52,12 @@ fun FilteringModal(dialogState: MutableState<Boolean>, solValue: String, roverVa
                         ) {
                             RadioButton(
                                 selected = (text == roverValue),
-                                onClick = null
+                                onClick = null,
+                                colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colors.primary)
                             )
                             Text(
                                 text = text,
-                                style = MaterialTheme.typography.body1.merge(),
+                                style = MaterialTheme.typography.body1.plus(TextStyle (color = MaterialTheme.colors.secondary)),
                                 modifier = Modifier.padding(start = 8.dp)
                             )
                         }
@@ -63,6 +68,7 @@ fun FilteringModal(dialogState: MutableState<Boolean>, solValue: String, roverVa
                     value = solValue,
                     modifier = Modifier
                         .fillMaxWidth(),
+                    textStyle = MaterialTheme.typography.body1.plus(TextStyle (color = MaterialTheme.colors.secondary)),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                     onValueChange = onValueChange,
                     label = { Text("Sol") }

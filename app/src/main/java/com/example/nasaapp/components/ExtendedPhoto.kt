@@ -1,13 +1,15 @@
 package com.example.nasaapp.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.domain.Photo
 
@@ -17,12 +19,17 @@ fun ExtendedPhoto(photo: Photo) {
         Image(
             painter = rememberImagePainter(data = photo.img_src),
             contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
         )
-        Text("Photo taken by ${photo.camera.full_name}")
-        Text("Photo taken in sol number ${photo.sol}")
-        Text("Photo taken by ${photo.rover.name} Mars Rover")
+        Column(
+            modifier = Modifier.padding(32.dp).padding(bottom = 0.dp)
+        ) {
+            Text("Photo Description", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.secondary, modifier = Modifier.padding(bottom = 8.dp))
+            Text("Taken by ${photo.rover.name} Mars Rover in its ${photo.camera.full_name} ", color = MaterialTheme.colors.secondary, lineHeight = 20.sp)
+            Text("Taken in sol number ${photo.sol}", color = MaterialTheme.colors.secondary, lineHeight = 20.sp)
+        }
+
     }
 }

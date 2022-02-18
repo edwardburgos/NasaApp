@@ -3,9 +3,11 @@ package com.example.nasaapp.home
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.example.nasaapp.components.Cameras
 import com.example.nasaapp.components.FilteringModal
 import com.example.nasaapp.components.PhotosColumn
@@ -25,9 +27,11 @@ fun HomeView(viewModel: HomeViewModel) {
                 title = { Text("Nasa App") },
                 actions = {
                     IconButton(onClick = { dialogState.value = true }) {
-                        Icon(Icons.Filled.MoreVert, contentDescription = "Filter")
+                        Icon(Icons.Filled.Search, contentDescription = "Filter", tint = MaterialTheme.colors.secondary)
                     }
-                }
+                },
+                backgroundColor = Color.Transparent,
+                elevation = 0.dp
             )
         }
     ) {
