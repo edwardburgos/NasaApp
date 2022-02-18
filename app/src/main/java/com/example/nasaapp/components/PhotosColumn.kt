@@ -16,13 +16,13 @@ fun PhotosColumn(navigate: (index: Int) -> Unit, photos: List<Photo>) {
 
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    PhotoCard(navigate, photos.elementAt(index * 3), index * 3)
+                    if (index * 3 + 1 < photos.size) PhotoCard(navigate, photos.elementAt(index * 3), index * 3)
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    PhotoCard(navigate, photos.elementAt((index * 3) + 1), (index * 3) + 1)
+                    if ((index * 3) + 2 < photos.size) PhotoCard(navigate, photos.elementAt((index * 3) + 1), (index * 3) + 1)
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    PhotoCard(navigate, photos.elementAt((index * 3) + 2), (index * 3) + 2)
+                    if ((index * 3) + 3 < photos.size) PhotoCard(navigate, photos.elementAt((index * 3) + 2), (index * 3) + 2)
                 }
             }
         }
