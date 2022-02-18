@@ -2,9 +2,7 @@ package com.example.nasaapp.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,15 +19,14 @@ fun PhotoCard(
     Card(
         modifier = Modifier
             .padding(start = 8.dp, top = 0.dp, end = 8.dp, bottom = 16.dp)
-            .clickable(onClick = { navigate(index) }),
+            .clickable(onClick = { navigate(index) })
+            .aspectRatio(1f),
         elevation = 4.dp
     ) {
         Image(
             painter = rememberImagePainter(data = photo.img_src),
             contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
