@@ -11,6 +11,7 @@ buildscript {
         version_navigation = "2.4.1"
         version_safe_args = "2.3.5"
         version_pager = "0.23.0"
+        version_systemuicontroller = "0.23.0"
     }
     repositories {
         google()

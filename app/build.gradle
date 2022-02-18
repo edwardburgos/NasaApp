@@ -100,4 +100,7 @@ dependencies {
 
     // Pager
     implementation "com.google.accompanist:accompanist-pager:$version_pager"
+
+    // System UI Controller
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$version_systemuicontroller"
 }
