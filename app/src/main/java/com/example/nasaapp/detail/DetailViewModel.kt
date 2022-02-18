@@ -17,15 +17,23 @@ class DetailViewModel @Inject constructor(
     private val apiMapper: PhotoApiMapper
 ) : ViewModel() {
 
+    private val _scrolled = MutableLiveData(false)
+    val scrolled: LiveData<Boolean>
+        get() = _scrolled
+
+    fun updateScrolled() {
+        _scrolled.value = true
+    }
+
     private val _photos = MutableLiveData<List<Photo>>()
     val photos: LiveData<List<Photo>>
         get() = _photos
 
-    private val _responseState = MutableLiveData<String>("initial")
+    private val _responseState = MutableLiveData("initial")
     val responseState: LiveData<String>
         get() = _responseState
 
-    var currentFlow = viewModelScope.launch { }
+    private var currentFlow = viewModelScope.launch { }
 
     init {
         getPhotosFromFlow("Curiosity", "1000", "All")

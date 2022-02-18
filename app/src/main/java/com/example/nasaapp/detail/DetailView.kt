@@ -19,7 +19,6 @@ import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.example.nasaapp.R
 import com.example.nasaapp.components.ExtendedPhoto
-import com.example.nasaapp.components.PhotosColumn
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -30,7 +29,7 @@ fun DetailView(viewModel: DetailViewModel, index: Int, goBack: () -> Unit, image
     val photos by viewModel.photos.observeAsState(listOf())
     val responseState by viewModel.responseState.observeAsState("empty")
     val pagerState = rememberPagerState()
-    val scrolled = remember { mutableStateOf(false) }
+    val scrolled by viewModel.scrolled.observeAsState(false)
 
     Scaffold(
         topBar = {
@@ -46,13 +45,13 @@ fun DetailView(viewModel: DetailViewModel, index: Int, goBack: () -> Unit, image
             )
         }
     ) {
-        if (photos.isNotEmpty())  {
+         if (photos.isNotEmpty())  {
             Box {
                 HorizontalPager(count = photos.size, state = pagerState,
                     modifier = Modifier.background(MaterialTheme.colors.background).fillMaxHeight()) { page ->
                     ExtendedPhoto(photos.elementAt(page))
                 }
-                if (!scrolled.value) {
+                if (!scrolled) {
                     Column(
                         modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colors.background),
                         verticalArrangement = Arrangement.Center,
@@ -97,7 +96,7 @@ fun DetailView(viewModel: DetailViewModel, index: Int, goBack: () -> Unit, image
                         )
                     }
                     "no internet" -> {
-                        Icon(Icons.Filled.WifiOff, contentDescription = "No Internet Conection", tint = MaterialTheme.colors.secondary, modifier = Modifier.size(50.dp).padding(bottom = 16.dp))
+                        Icon(Icons.Filled.WifiOff, contentDescription = "No Internet Connection", tint = MaterialTheme.colors.secondary, modifier = Modifier.size(50.dp).padding(bottom = 16.dp))
                         Text(text = "No internet connection", style = MaterialTheme.typography.body1.plus(
                             TextStyle (color = MaterialTheme.colors.secondary)
                         ))
@@ -107,9 +106,9 @@ fun DetailView(viewModel: DetailViewModel, index: Int, goBack: () -> Unit, image
         }
     }
 
-    if (pagerState.pageCount != 0 && pagerState.currentPage == 0 && !scrolled.value) {
+    if (pagerState.pageCount != 0 && pagerState.currentPage == 0 && !scrolled) {
         LaunchedEffect(pagerState.currentPage) {
-            scrolled.value = true
+            viewModel.updateScrolled()
             pagerState.scrollToPage(index)
         }
     }
