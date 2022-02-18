@@ -1,5 +1,6 @@
 package com.example.nasaapp.home
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import coil.ImageLoader
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import com.example.nasaapp.ui.theme.NasaAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,9 +25,20 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
+
+            val imageLoader = ImageLoader.Builder(context)
+                .componentRegistry {
+                    if (Build.VERSION.SDK_INT >= 28) {
+                        add(ImageDecoderDecoder(context))
+                    } else {
+                        add(GifDecoder())
+                    }
+                }
+                .build()
+
             setContent {
                 NasaAppTheme {
-                    HomeView(viewModel = viewModel)
+                    HomeView(viewModel = viewModel, imageLoader = imageLoader)
                 }
             }
         }

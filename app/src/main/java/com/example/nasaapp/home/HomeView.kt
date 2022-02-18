@@ -1,19 +1,25 @@
 package com.example.nasaapp.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
+import coil.compose.rememberImagePainter
+import com.example.nasaapp.R
 import com.example.nasaapp.components.Cameras
 import com.example.nasaapp.components.FilteringModal
 import com.example.nasaapp.components.PhotosColumn
 
 @Composable
-fun HomeView(viewModel: HomeViewModel) {
+fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
     val photos by viewModel.photos.observeAsState(listOf())
     val dialogState = remember { mutableStateOf(false) }
     val currentSol = remember { mutableStateOf( if (viewModel.sol.value != null) viewModel.sol.value else "1000" ) }
@@ -21,6 +27,7 @@ fun HomeView(viewModel: HomeViewModel) {
     val sol by viewModel.sol.observeAsState("1000")
     val rover by viewModel.roverName.observeAsState("Curiosity")
     val selectedCamera by viewModel.selectedCamera.observeAsState("All")
+
     Scaffold(
         topBar = {
             TopAppBar (
@@ -40,7 +47,19 @@ fun HomeView(viewModel: HomeViewModel) {
             if (photos.isNotEmpty()) PhotosColumn(
                 { index -> viewModel.displayPropertyDetails(index) },
                 photos = photos
-            )
+            ) else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = rememberImagePainter(R.drawable.loader, imageLoader = imageLoader),
+                        contentDescription = null,
+                        modifier = Modifier.width(50.dp)
+                    )
+                }
+            }
         }
             if (dialogState.value) {
                 currentSol.value?.let { it1 ->
