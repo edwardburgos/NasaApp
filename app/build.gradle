@@ -111,4 +111,7 @@ dependencies {
     // Coil support for gifs
     implementation "io.coil-kt:coil-gif:$version_coil"
 
+    // More Material Icons
+    implementation "androidx.compose.material:material-icons-extended:$version_material"
+
 }
