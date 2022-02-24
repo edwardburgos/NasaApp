@@ -27,6 +27,7 @@ class ApiModule {
         .add(KotlinJsonAdapterFactory())
         .build()
 
+    // TODO: Good use of the interceptor to set the API KEY
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor { chain ->
             val original = chain.request()
