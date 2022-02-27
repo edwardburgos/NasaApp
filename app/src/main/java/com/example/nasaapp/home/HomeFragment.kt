@@ -12,11 +12,14 @@ import androidx.navigation.Navigation
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import com.example.nasaapp.BaseFragment
 import com.example.nasaapp.ui.theme.NasaAppTheme
+import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalPagerApi
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
@@ -24,27 +27,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // TODO: Since this code seems to be duplicated in both HomeFragment and DetailFragment,
-        //  you could've moved it to a BaseFragment class that both fragments would inherit from
-        //  and only pass the necessary variables.
-        return ComposeView(requireContext()).apply {
-
-            val imageLoader = ImageLoader.Builder(context)
-                .componentRegistry {
-                    if (Build.VERSION.SDK_INT >= 28) {
-                        add(ImageDecoderDecoder(context))
-                    } else {
-                        add(GifDecoder())
-                    }
-                }
-                .build()
-
-            setContent {
-                NasaAppTheme {
-                    HomeView(viewModel = viewModel, imageLoader = imageLoader)
-                }
-            }
-        }
+        return createComposable(viewModel,null,null,null)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
