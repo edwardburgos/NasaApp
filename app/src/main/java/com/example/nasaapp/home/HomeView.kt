@@ -68,8 +68,6 @@ fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // TODO: This is the type of scenario where having a dedicated class to represent the state would come in handy.
-                    //  It would make the code cleaner overall instead of having many hardcoded strings.
                     when (responseState) {
                         ResponseState.ERROR ->  {
                             Icon(Icons.Filled.Warning, contentDescription = "Error Ocurred", tint = MaterialTheme.colors.secondary, modifier = Modifier.size(50.dp).padding(bottom = 16.dp))
