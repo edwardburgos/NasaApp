@@ -40,11 +40,7 @@ fun ExtendedPhoto(photo: Photo) {
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    // TODO: To avoid boilerplate code this could be moved to a separated component
-                    //  where you only pass in the data it needs.
-                    Text("Photo Description", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.secondary, modifier = Modifier.padding(bottom = 8.dp))
-                    Text("Taken by ${photo.rover.name} Mars Rover in its ${photo.camera.full_name} ", color = MaterialTheme.colors.secondary, lineHeight = 20.sp)
-                    Text("Taken in sol number ${photo.sol}", color = MaterialTheme.colors.secondary, lineHeight = 20.sp)
+                    ExtendedPhotoDescription(rover = photo.rover.name,camera = photo.camera.full_name, sol = photo.sol)
                 }
             }
         }
@@ -62,9 +58,7 @@ fun ExtendedPhoto(photo: Photo) {
                         .padding(32.dp)
                         .padding(bottom = 0.dp)
                 ) {
-                    Text("Photo Description", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.secondary, modifier = Modifier.padding(bottom = 8.dp))
-                    Text("Taken by ${photo.rover.name} Mars Rover in its ${photo.camera.full_name} ", color = MaterialTheme.colors.secondary, lineHeight = 20.sp)
-                    Text("Taken in sol number ${photo.sol}", color = MaterialTheme.colors.secondary, lineHeight = 20.sp)
+                    ExtendedPhotoDescription(rover = photo.rover.name,camera = photo.camera.full_name, sol = photo.sol)
                 }
 
             }
