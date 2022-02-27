@@ -20,12 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-// TODO: dialogState could be hoisted to avoid modifying external state from this composable.
-fun FilteringModal(dialogState: MutableState<Boolean>, solValue: String, roverValue: String, onValueChange: (String) -> Unit, getPhotos: (String, String) -> Unit, updateSol: (String) -> Unit, viewModelSol: String,
+fun FilteringModal(dialogStateUpdate: (Boolean) -> Unit, solValue: String, roverValue: String, onValueChange: (String) -> Unit, getPhotos: (String, String) -> Unit, updateSol: (String) -> Unit, viewModelSol: String,
                    viewModelRover: String, options: List<String>, onOptionClick: (String) -> Unit, updateRover: (String) -> Unit) {
     AlertDialog(
         onDismissRequest = {
-            dialogState.value = false
+            dialogStateUpdate(false)
             onValueChange(viewModelSol)
             onOptionClick(viewModelRover)
         },
@@ -79,7 +78,7 @@ fun FilteringModal(dialogState: MutableState<Boolean>, solValue: String, roverVa
         confirmButton = {
             TextButton(
                 onClick = {
-                    dialogState.value = false
+                    dialogStateUpdate(false)
                     updateSol(solValue)
                     updateRover(roverValue)
                     getPhotos(roverValue, solValue)
@@ -91,7 +90,7 @@ fun FilteringModal(dialogState: MutableState<Boolean>, solValue: String, roverVa
         dismissButton = {
             TextButton(
                 onClick = {
-                    dialogState.value = false
+                    dialogStateUpdate(false)
                     onValueChange(viewModelSol)
                     onOptionClick(viewModelRover)
                 }

@@ -105,7 +105,7 @@ fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
         if (dialogState.value) {
             currentSol.value?.let { it1 ->
                 currentRover.value?.let { it2 ->
-                    FilteringModal(dialogState = dialogState, solValue = it1, roverValue = it2, onValueChange = { currentSol.value = it }, getPhotos = { itRover, itSol -> viewModel.getPhotosFromFlow(itRover, itSol, selectedCamera) },
+                    FilteringModal(dialogStateUpdate = { dialogState.value = it }, solValue = it1, roverValue = it2, onValueChange = { currentSol.value = it }, getPhotos = { itRover, itSol -> viewModel.getPhotosFromFlow(itRover, itSol, selectedCamera) },
                             updateSol = { viewModel.updateSol(it) }, viewModelSol = sol, viewModelRover = rover, options =  viewModel.rovers, onOptionClick = { currentRover.value = it },
                             updateRover = { viewModel.updateRoverName(it) })
                 }
