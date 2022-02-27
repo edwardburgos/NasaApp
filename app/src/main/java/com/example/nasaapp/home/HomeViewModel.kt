@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 
 import androidx.lifecycle.*
 import com.example.data.network.model.PhotoApiMapper
+import com.example.data.network.model.ResponseState
 import com.example.domain.Photo
 import com.example.usecases.getphotos.GetPhotosApiUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,8 +22,8 @@ class HomeViewModel @Inject constructor(
     // TODO: These could be in an enum class, a sealed class, or a constant instead of being hardcoded strings
     val rovers = listOf("Curiosity", "Opportunity", "Spirit")
 
-    private val _responseState = MutableLiveData("initial")
-    val responseState: LiveData<String>
+    private val _responseState = MutableLiveData(ResponseState.INITIAL)
+    val responseState: LiveData<ResponseState>
         get() = _responseState
 
     private val _photos = MutableLiveData<List<Photo>>()
@@ -85,7 +86,7 @@ class HomeViewModel @Inject constructor(
             getPhotosApi(name.lowercase(), sol, selectedCamera).collect {
                 if (_photos.value == null || _photos.value?.size == 0 ||
                     _photos.value != apiMapper.fromEntityList(it.photos) ||
-                    it.status != "initial"
+                    it.status != ResponseState.INITIAL
                 ) {
                     _responseState.value = it.status
                     _photos.value = apiMapper.fromEntityList(it.photos)

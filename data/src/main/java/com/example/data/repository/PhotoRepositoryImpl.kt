@@ -3,6 +3,7 @@ package com.example.data.repository
 import android.util.Log
 import com.example.data.network.ApiService
 import com.example.data.network.model.ResponseApi
+import com.example.data.network.model.ResponseState
 import com.example.data.repository.model.GetPhotosResponse
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +28,7 @@ class PhotoRepositoryImpl @Inject constructor(
                 "opportunity" -> apiService.getPhotosOpportunity(sol, camera)
                 else -> apiService.getPhotosSpirit(sol, camera)
             }
-            var finalResponse = GetPhotosResponse("initial", listOf())
+            var finalResponse = GetPhotosResponse(ResponseState.INITIAL, listOf())
 
             // TODO: This is where using Retrofit's suspend function support would come in handy.
             //  You would have the ability to write asynchronous code in a synchronous way without having
@@ -41,7 +42,7 @@ class PhotoRepositoryImpl @Inject constructor(
                             //  and act accordingly, but it would be better if the type of "status" was either an enum or a sealed class.
                             //  Having it as a hardcoded string makes it more error prone (a simple typo could break the functionality and would be hard to debug)
                             //  and less scalable if you later wanted to add another status.
-                            finalResponse = GetPhotosResponse(if (it.photos.isEmpty()) "empty" else "filled", it.photos)
+                            finalResponse = GetPhotosResponse(if (it.photos.isEmpty()) ResponseState.EMPTY else ResponseState.FILLED, it.photos)
                         }
                     }
                 }
@@ -49,12 +50,12 @@ class PhotoRepositoryImpl @Inject constructor(
                     Log.e("Failure", "Message " + t.message)
                     //TODO: Comparing against a specific error message isn't a reliable way to check whether or not the phone has internet access.
                     //  Using something like ConnectivityManager would be a better approach.
-                    finalResponse = GetPhotosResponse(if (t.message == "Unable to resolve host \"api.nasa.gov\": No address associated with hostname") "no internet" else "error", listOf())
+                    finalResponse = GetPhotosResponse(if (t.message == "Unable to resolve host \"api.nasa.gov\": No address associated with hostname") ResponseState.NO_INTERNET else ResponseState.ERROR, listOf())
                 }
             })
             while (true) {
                 emit(finalResponse)
-                    if (finalResponse.status == "initial") {
+                    if (finalResponse.status == ResponseState.INITIAL) {
                         delay(refreshIntervalMsShort)
                     } else {
                         delay(refreshIntervalMsLong)

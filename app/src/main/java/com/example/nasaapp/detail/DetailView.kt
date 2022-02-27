@@ -17,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
+import com.example.data.network.model.ResponseState
 import com.example.nasaapp.R
 import com.example.nasaapp.components.ExtendedPhoto
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -27,7 +28,7 @@ import com.google.accompanist.pager.rememberPagerState
 @Composable
 fun DetailView(viewModel: DetailViewModel, index: Int, goBack: () -> Unit, imageLoader: ImageLoader) {
     val photos by viewModel.photos.observeAsState(listOf())
-    val responseState by viewModel.responseState.observeAsState("empty")
+    val responseState by viewModel.responseState.observeAsState(ResponseState.EMPTY)
     val pagerState = rememberPagerState()
     val scrolled by viewModel.scrolled.observeAsState(false)
 
@@ -72,18 +73,18 @@ fun DetailView(viewModel: DetailViewModel, index: Int, goBack: () -> Unit, image
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 when (responseState) {
-                    "error" ->  {
+                    ResponseState.ERROR ->  {
                         Icon(Icons.Filled.Warning, contentDescription = "Error Ocurred", tint = MaterialTheme.colors.secondary, modifier = Modifier.size(50.dp).padding(bottom = 16.dp))
                         Text(text = "An error ocurred", style = MaterialTheme.typography.body1.plus(
                             TextStyle (color = MaterialTheme.colors.secondary)
                         ))
                     }
-                    "initial" -> Image(
+                    ResponseState.INITIAL -> Image(
                         painter = rememberImagePainter(R.drawable.loader, imageLoader = imageLoader),
                         contentDescription = null,
                         modifier = Modifier.width(50.dp)
                     )
-                    "empty" -> {
+                    ResponseState.EMPTY -> {
                         Image(
                             painter = rememberImagePainter(R.drawable.nodata),
                             contentDescription = null,
@@ -95,7 +96,7 @@ fun DetailView(viewModel: DetailViewModel, index: Int, goBack: () -> Unit, image
                             )
                         )
                     }
-                    "no internet" -> {
+                    ResponseState.NO_INTERNET -> {
                         Icon(Icons.Filled.WifiOff, contentDescription = "No Internet Connection", tint = MaterialTheme.colors.secondary, modifier = Modifier.size(50.dp).padding(bottom = 16.dp))
                         Text(text = "No internet connection", style = MaterialTheme.typography.body1.plus(
                             TextStyle (color = MaterialTheme.colors.secondary)

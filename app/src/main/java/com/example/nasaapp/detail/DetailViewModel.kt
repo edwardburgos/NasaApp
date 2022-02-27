@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.network.model.PhotoApiMapper
+import com.example.data.network.model.ResponseState
 import com.example.domain.Photo
 import com.example.usecases.getphotos.GetPhotosApiUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,8 +30,8 @@ class DetailViewModel @Inject constructor(
     val photos: LiveData<List<Photo>>
         get() = _photos
 
-    private val _responseState = MutableLiveData("initial")
-    val responseState: LiveData<String>
+    private val _responseState = MutableLiveData(ResponseState.INITIAL)
+    val responseState: LiveData<ResponseState>
         get() = _responseState
 
     private var currentFlow = viewModelScope.launch { }
@@ -45,7 +46,7 @@ class DetailViewModel @Inject constructor(
             getPhotosApi(name, sol, selectedCamera).collect {
                 if (_photos.value == null || _photos.value?.size == 0 || _photos.value != apiMapper.fromEntityList(
                         it.photos
-                    ) || it.status != "initial"
+                    ) || it.status != ResponseState.INITIAL
                 ) {
                     _responseState.value = it.status
                     _photos.value = apiMapper.fromEntityList(it.photos)

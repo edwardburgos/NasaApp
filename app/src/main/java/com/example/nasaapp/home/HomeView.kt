@@ -16,6 +16,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
+import com.example.data.network.model.ResponseState
 import com.example.nasaapp.R
 import com.example.nasaapp.components.Cameras
 import com.example.nasaapp.components.FilteringModal
@@ -26,7 +27,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 @Composable
 fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
     val photos by viewModel.photos.observeAsState(listOf())
-    val responseState by viewModel.responseState.observeAsState("empty")
+    val responseState by viewModel.responseState.observeAsState(ResponseState.EMPTY)
     val dialogState = remember { mutableStateOf(false) }
     val currentSol = remember { mutableStateOf( if (viewModel.sol.value != null) viewModel.sol.value else "1000" ) }
     val currentRover = remember { mutableStateOf( if (viewModel.roverName.value != null) viewModel.roverName.value else "Curiosity" ) }
@@ -70,18 +71,18 @@ fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
                     // TODO: This is the type of scenario where having a dedicated class to represent the state would come in handy.
                     //  It would make the code cleaner overall instead of having many hardcoded strings.
                     when (responseState) {
-                        "error" ->  {
+                        ResponseState.ERROR ->  {
                             Icon(Icons.Filled.Warning, contentDescription = "Error Ocurred", tint = MaterialTheme.colors.secondary, modifier = Modifier.size(50.dp).padding(bottom = 16.dp))
                             Text(text = "An error ocurred", style = MaterialTheme.typography.body1.plus(
                                 TextStyle (color = MaterialTheme.colors.secondary)
                             ))
                         }
-                        "initial" -> Image(
+                        ResponseState.INITIAL -> Image(
                                 painter = rememberImagePainter(R.drawable.loader, imageLoader = imageLoader),
                                 contentDescription = null,
                                 modifier = Modifier.width(50.dp)
                             )
-                        "empty" -> {
+                        ResponseState.EMPTY -> {
                             Image(
                                 painter = rememberImagePainter(R.drawable.nodata),
                                 contentDescription = null,
@@ -91,7 +92,7 @@ fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
                                 TextStyle (color = MaterialTheme.colors.secondary)
                             ))
                         }
-                        "no internet" -> {
+                        ResponseState.NO_INTERNET -> {
                             Icon(Icons.Filled.WifiOff, contentDescription = "No Internet Conecction", tint = MaterialTheme.colors.secondary, modifier = Modifier.size(50.dp).padding(bottom = 16.dp))
                             Text(text = "No internet connection", style = MaterialTheme.typography.body1.plus(
                                 TextStyle (color = MaterialTheme.colors.secondary)
