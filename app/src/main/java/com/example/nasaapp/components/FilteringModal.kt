@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
+// TODO: dialogState could be hoisted to avoid modifying external state from this composable.
 fun FilteringModal(dialogState: MutableState<Boolean>, solValue: String, roverValue: String, onValueChange: (String) -> Unit, getPhotos: (String, String) -> Unit, updateSol: (String) -> Unit, viewModelSol: String,
                    viewModelRover: String, options: List<String>, onOptionClick: (String) -> Unit, updateRover: (String) -> Unit) {
     AlertDialog(

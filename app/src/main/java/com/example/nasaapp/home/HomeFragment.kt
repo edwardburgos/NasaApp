@@ -24,6 +24,9 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // TODO: Since this code seems to be duplicated in both HomeFragment and DetailFragment,
+        //  you could've moved it to a BaseFragment class that both fragments would inherit from
+        //  and only pass the necessary variables.
         return ComposeView(requireContext()).apply {
 
             val imageLoader = ImageLoader.Builder(context)
