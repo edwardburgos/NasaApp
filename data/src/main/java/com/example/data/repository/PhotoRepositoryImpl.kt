@@ -40,10 +40,6 @@ class PhotoRepositoryImpl @Inject constructor(
                 override fun onResponse(call: Call<ResponseApi>, response: Response<ResponseApi>) {
                     if (response.isSuccessful) {
                         response.body()?.let {
-                            // TODO: Having a "status" field on the response is a really good approach, since you can let the UI know about the state
-                            //  and act accordingly, but it would be better if the type of "status" was either an enum or a sealed class.
-                            //  Having it as a hardcoded string makes it more error prone (a simple typo could break the functionality and would be hard to debug)
-                            //  and less scalable if you later wanted to add another status.
                             finalResponse = GetPhotosResponse(if (it.photos.isEmpty()) ResponseState.EMPTY else ResponseState.FILLED, apiMapper.fromEntityList(it.photos))
                         }
                     }
