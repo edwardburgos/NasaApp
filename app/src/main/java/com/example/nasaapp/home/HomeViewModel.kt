@@ -5,14 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.*
 import com.example.data.network.model.ResponseState
 import com.example.domain.Photo
-import com.example.usecases.getphotos.GetPhotosApiUseCaseImpl
+import com.example.usecases.getphotos.GetPhotosApiUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getPhotosApi: GetPhotosApiUseCaseImpl
+    private val getPhotosApi: GetPhotosApiUseCase
 ) : ViewModel() {
 
     // TODO: These could be in an enum class, a sealed class, or a constant instead of being hardcoded strings

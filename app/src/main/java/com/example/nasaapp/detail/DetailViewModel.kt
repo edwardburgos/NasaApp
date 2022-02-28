@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.network.model.ResponseState
 import com.example.domain.Photo
-import com.example.usecases.getphotos.GetPhotosApiUseCaseImpl
+import com.example.usecases.getphotos.GetPhotosApiUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val getPhotosApi: GetPhotosApiUseCaseImpl
+    private val getPhotosApi: GetPhotosApiUseCase
 ) : ViewModel() {
 
     private val _scrolled = MutableLiveData(false)
