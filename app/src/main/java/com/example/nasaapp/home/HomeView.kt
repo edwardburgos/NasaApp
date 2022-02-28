@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.example.data.network.model.ResponseState
+import com.example.domain.CameraName
+import com.example.domain.RoverName
 import com.example.nasaapp.R
 import com.example.nasaapp.components.Cameras
 import com.example.nasaapp.components.FilteringModal
@@ -30,10 +32,10 @@ fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
     val responseState by viewModel.responseState.observeAsState(ResponseState.EMPTY)
     val dialogState = remember { mutableStateOf(false) }
     val currentSol = remember { mutableStateOf( if (viewModel.sol.value != null) viewModel.sol.value else "1000" ) }
-    val currentRover = remember { mutableStateOf( if (viewModel.roverName.value != null) viewModel.roverName.value else "Curiosity" ) }
+    val currentRover = remember { mutableStateOf( if (viewModel.roverName.value != null) viewModel.roverName.value else RoverName.Curiosity ) }
     val sol by viewModel.sol.observeAsState("1000")
-    val rover by viewModel.roverName.observeAsState("Curiosity")
-    val selectedCamera by viewModel.selectedCamera.observeAsState("All")
+    val rover by viewModel.roverName.observeAsState(RoverName.Curiosity)
+    val selectedCamera by viewModel.selectedCamera.observeAsState(CameraName.All)
     val isRefreshing by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -105,7 +107,7 @@ fun HomeView(viewModel: HomeViewModel, imageLoader: ImageLoader) {
             currentSol.value?.let { currentSolValue ->
                 currentRover.value?.let { currentRoverValue ->
                     FilteringModal(dialogStateUpdate = { dialogState.value = it }, solValue = currentSolValue, roverValue = currentRoverValue, onValueChange = { currentSol.value = it }, getPhotos = { itRover, itSol -> viewModel.getPhotosFromFlow(itRover, itSol, selectedCamera) },
-                            updateSol = { viewModel.updateSol(it) }, viewModelSol = sol, viewModelRover = rover, options =  viewModel.rovers, onOptionClick = { currentRover.value = it },
+                            updateSol = { viewModel.updateSol(it) }, viewModelSol = sol, viewModelRover = rover, options =  listOf(RoverName.Curiosity, RoverName.Opportunity, RoverName.Spirit), onOptionClick = { currentRover.value = it },
                             updateRover = { viewModel.updateRoverName(it) })
                 }
             }

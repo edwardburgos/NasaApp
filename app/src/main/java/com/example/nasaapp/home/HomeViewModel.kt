@@ -4,7 +4,10 @@ import androidx.lifecycle.ViewModel
 
 import androidx.lifecycle.*
 import com.example.data.network.model.ResponseState
+import com.example.domain.Camera
+import com.example.domain.CameraName
 import com.example.domain.Photo
+import com.example.domain.RoverName
 import com.example.usecases.getphotos.GetPhotosApiUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,9 +17,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getPhotosApi: GetPhotosApiUseCase
 ) : ViewModel() {
-
-    // TODO: These could be in an enum class, a sealed class, or a constant instead of being hardcoded strings
-    val rovers = listOf("Curiosity", "Opportunity", "Spirit")
 
     private val _responseState = MutableLiveData(ResponseState.INITIAL)
     val responseState: LiveData<ResponseState>
@@ -34,23 +34,23 @@ class HomeViewModel @Inject constructor(
     val sol: LiveData<String>
         get() = _sol
 
-    private val _roverName = MutableLiveData("Curiosity")
-    val roverName: LiveData<String>
+    private val _roverName = MutableLiveData(RoverName.Curiosity)
+    val roverName: LiveData<RoverName>
         get() = _roverName
 
-    private val _selectedCamera = MutableLiveData("All")
-    val selectedCamera: LiveData<String>
+    private val _selectedCamera = MutableLiveData(CameraName.All)
+    val selectedCamera: LiveData<CameraName>
         get() = _selectedCamera
 
     fun updateSol(newValue: String) {
         _sol.value = newValue
     }
 
-    fun updateRoverName(newValue: String) {
+    fun updateRoverName(newValue: RoverName) {
         _roverName.value = newValue
     }
 
-    fun updateSelectedCamera(newValue: String) {
+    fun updateSelectedCamera(newValue: CameraName) {
         _selectedCamera.value = newValue
         _sol.value?.let {
             _roverName.value?.let { roverName ->
@@ -73,10 +73,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getPhotosFromFlow(name: String, sol: String, selectedCamera: String) {
+    fun getPhotosFromFlow(name: RoverName, sol: String, selectedCamera: CameraName) {
         currentFlow.cancel()
         currentFlow = viewModelScope.launch {
-            getPhotosApi(name.lowercase(), sol, selectedCamera).collect {
+            getPhotosApi(name, sol, selectedCamera).collect {
                 if (_photos.value == null || _photos.value?.size == 0 ||
                     _photos.value != it.photos ||
                     it.status != ResponseState.INITIAL
@@ -96,16 +96,15 @@ class HomeViewModel @Inject constructor(
         _navigateToSelectedPhoto.value = null
     }
 
-    fun getAvailableCameras(roverName: String): List<String> {
+    fun getAvailableCameras(roverName: RoverName): List<CameraName> {
         val cameras = when (roverName) {
-            //TODO: These kind of string values should be in either a constant or a string resource inside strings.xml
-            "Curiosity" -> listOf("All", "FHAZ", "RHAZ", "MAST", "CHEMCAM", "MAHLI", "MARDI", "NAVCAM")
-            "Opportunity", "Spirit" -> listOf("All", "FHAZ", "RHAZ", "NAVCAM", "PANCAM", "MINITES")
+            RoverName.Curiosity -> listOf(CameraName.All, CameraName.FHAZ, CameraName.RHAZ, CameraName.MAST, CameraName.CHEMCAM, CameraName.MAHLI, CameraName.MARDI, CameraName.NAVCAM)
+            RoverName.Opportunity, RoverName.Spirit -> listOf(CameraName.All, CameraName.FHAZ, CameraName.RHAZ, CameraName.NAVCAM, CameraName.PANCAM, CameraName.MINITES)
             else -> listOf()
         }
         if (cameras.indexOf(selectedCamera.value) == -1) {
-            _selectedCamera.value = "All"
-            updateSelectedCamera("All")
+            _selectedCamera.value = CameraName.All
+            updateSelectedCamera(CameraName.All)
         }
         return cameras
     }

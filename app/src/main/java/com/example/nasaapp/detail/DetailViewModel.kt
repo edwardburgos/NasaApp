@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.network.model.ResponseState
+import com.example.domain.CameraName
 import com.example.domain.Photo
+import com.example.domain.RoverName
 import com.example.usecases.getphotos.GetPhotosApiUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -34,11 +36,7 @@ class DetailViewModel @Inject constructor(
 
     private var currentFlow = viewModelScope.launch { }
 
-    init {
-        getPhotosFromFlow("Curiosity", "1000", "All")
-    }
-
-    fun getPhotosFromFlow(name: String, sol: String, selectedCamera: String) {
+    fun getPhotosFromFlow(name: RoverName, sol: String, selectedCamera: CameraName) {
         currentFlow.cancel()
         currentFlow = viewModelScope.launch {
             getPhotosApi(name, sol, selectedCamera).collect {

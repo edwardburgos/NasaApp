@@ -11,12 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.material.Surface
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.Text
+import com.example.domain.CameraName
 
 @Composable
 fun Camera(
-    cameraName: String,
+    cameraName: CameraName,
     isSelected: Boolean,
-    onClick: (String) -> Unit
+    onClick: (CameraName) -> Unit
 ) {
     Surface(
         modifier = Modifier.padding(end = 8.dp, bottom = 8.dp).clickable(onClick = { onClick(cameraName) }),
@@ -29,7 +30,7 @@ fun Camera(
         border = if (!isSystemInDarkTheme() || isSelected) null else BorderStroke(1.dp, MaterialTheme.colors.secondary)
     ) {
         Text(
-            text = cameraName,
+            text = cameraName.toString(),
             style = MaterialTheme.typography.body2,
             modifier = Modifier.padding(16.dp, 8.dp)
         )

@@ -18,10 +18,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.domain.RoverName
 
 @Composable
-fun FilteringModal(dialogStateUpdate: (Boolean) -> Unit, solValue: String, roverValue: String, onValueChange: (String) -> Unit, getPhotos: (String, String) -> Unit, updateSol: (String) -> Unit, viewModelSol: String,
-                   viewModelRover: String, options: List<String>, onOptionClick: (String) -> Unit, updateRover: (String) -> Unit) {
+fun FilteringModal(dialogStateUpdate: (Boolean) -> Unit, solValue: String, roverValue: RoverName, onValueChange: (String) -> Unit, getPhotos: (RoverName, String) -> Unit, updateSol: (String) -> Unit, viewModelSol: String,
+                   viewModelRover: RoverName, options: List<RoverName>, onOptionClick: (RoverName) -> Unit, updateRover: (RoverName) -> Unit) {
     AlertDialog(
         onDismissRequest = {
             dialogStateUpdate(false)
@@ -56,7 +57,7 @@ fun FilteringModal(dialogStateUpdate: (Boolean) -> Unit, solValue: String, rover
                                 colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colors.primary)
                             )
                             Text(
-                                text = text,
+                                text = text.toString(),
                                 style = MaterialTheme.typography.body1.plus(TextStyle (color = MaterialTheme.colors.secondary)),
                                 modifier = Modifier.padding(start = 8.dp)
                             )
