@@ -53,12 +53,9 @@ class HomeViewModel @Inject constructor(
     fun updateSelectedCamera(newValue: String) {
         _selectedCamera.value = newValue
         _sol.value?.let {
-            // TODO: Try to avoid naming things it1, it2, it3... etc inside let operators, since it can get really confusing
-            //  on nested blocks. Instead try giving them a meaningful name. sol instead of it, roverName instead of it1
-            //  and so on a so forth.
-            _roverName.value?.let { it1 ->
-                _selectedCamera.value?.let { it2 ->
-                    getPhotosFromFlow(it1, it, it2)
+            _roverName.value?.let { roverName ->
+                _selectedCamera.value?.let { selectedCamera ->
+                    getPhotosFromFlow(roverName, it, selectedCamera)
                 }
             }
         }
@@ -68,9 +65,9 @@ class HomeViewModel @Inject constructor(
 
     init {
         _sol.value?.let {
-            _roverName.value?.let { it1 ->
-                _selectedCamera.value?.let { it2 ->
-                    getPhotosFromFlow(it1, it, it2)
+            _roverName.value?.let { roverName ->
+                _selectedCamera.value?.let { selectedCamera ->
+                    getPhotosFromFlow(roverName, it, selectedCamera)
                 }
             }
         }
