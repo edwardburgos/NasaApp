@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.data.network.model.PhotoApiMapper
 import com.example.data.network.model.ResponseState
 import com.example.domain.Photo
 import com.example.usecases.getphotos.GetPhotosApiUseCaseImpl
@@ -14,8 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val getPhotosApi: GetPhotosApiUseCaseImpl,
-    private val apiMapper: PhotoApiMapper
+    private val getPhotosApi: GetPhotosApiUseCaseImpl
 ) : ViewModel() {
 
     private val _scrolled = MutableLiveData(false)
@@ -44,12 +42,11 @@ class DetailViewModel @Inject constructor(
         currentFlow.cancel()
         currentFlow = viewModelScope.launch {
             getPhotosApi(name, sol, selectedCamera).collect {
-                if (_photos.value == null || _photos.value?.size == 0 || _photos.value != apiMapper.fromEntityList(
-                        it.photos
-                    ) || it.status != ResponseState.INITIAL
+                if (_photos.value == null || _photos.value?.size == 0 || _photos.value != it.photos
+                    || it.status != ResponseState.INITIAL
                 ) {
                     _responseState.value = it.status
-                    _photos.value = apiMapper.fromEntityList(it.photos)
+                    _photos.value = it.photos
                 }
             }
         }

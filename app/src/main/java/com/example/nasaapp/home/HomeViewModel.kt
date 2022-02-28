@@ -3,7 +3,6 @@ package com.example.nasaapp.home
 import androidx.lifecycle.ViewModel
 
 import androidx.lifecycle.*
-import com.example.data.network.model.PhotoApiMapper
 import com.example.data.network.model.ResponseState
 import com.example.domain.Photo
 import com.example.usecases.getphotos.GetPhotosApiUseCaseImpl
@@ -11,12 +10,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//TODO: The viewModel should only depend on the use case, and the use case should return what the viewModel needs.
-// The mapper shouldn't be here as a dependency of the viewModel, but rather it should only be used at the repository level.
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getPhotosApi: GetPhotosApiUseCaseImpl,
-    private val apiMapper: PhotoApiMapper
+    private val getPhotosApi: GetPhotosApiUseCaseImpl
 ) : ViewModel() {
 
     // TODO: These could be in an enum class, a sealed class, or a constant instead of being hardcoded strings
@@ -85,11 +81,11 @@ class HomeViewModel @Inject constructor(
         currentFlow = viewModelScope.launch {
             getPhotosApi(name.lowercase(), sol, selectedCamera).collect {
                 if (_photos.value == null || _photos.value?.size == 0 ||
-                    _photos.value != apiMapper.fromEntityList(it.photos) ||
+                    _photos.value != it.photos ||
                     it.status != ResponseState.INITIAL
                 ) {
                     _responseState.value = it.status
-                    _photos.value = apiMapper.fromEntityList(it.photos)
+                    _photos.value = it.photos
                 }
             }
         }

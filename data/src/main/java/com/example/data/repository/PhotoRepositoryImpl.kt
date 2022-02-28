@@ -2,6 +2,7 @@ package com.example.data.repository
 
 import android.util.Log
 import com.example.data.network.ApiService
+import com.example.data.network.model.PhotoApiMapper
 import com.example.data.network.model.ResponseApi
 import com.example.data.network.model.ResponseState
 import com.example.data.repository.model.GetPhotosResponse
@@ -14,7 +15,8 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class PhotoRepositoryImpl @Inject constructor(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val apiMapper: PhotoApiMapper
 ) : PhotoRepository {
 
     private val refreshIntervalMsShort: Long = 1000
@@ -42,7 +44,7 @@ class PhotoRepositoryImpl @Inject constructor(
                             //  and act accordingly, but it would be better if the type of "status" was either an enum or a sealed class.
                             //  Having it as a hardcoded string makes it more error prone (a simple typo could break the functionality and would be hard to debug)
                             //  and less scalable if you later wanted to add another status.
-                            finalResponse = GetPhotosResponse(if (it.photos.isEmpty()) ResponseState.EMPTY else ResponseState.FILLED, it.photos)
+                            finalResponse = GetPhotosResponse(if (it.photos.isEmpty()) ResponseState.EMPTY else ResponseState.FILLED, apiMapper.fromEntityList(it.photos))
                         }
                     }
                 }
